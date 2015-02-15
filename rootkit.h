@@ -17,7 +17,7 @@
 #include <asm/uaccess.h>
 #include <asm/errno.h>
 #include <linux/fcntl.h>
-#include <sys/types.h>
+#include <linux/cred.h>
 
 /*
  * Typedef's

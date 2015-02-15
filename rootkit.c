@@ -315,7 +315,8 @@ asmlinkage int new_execve(const char *filename, char *const argv[], char *const 
   orig_func = (void*) execve_hook->orig_func;
 
   //Uncomment for a spammy line for every execve()
-  printk(KERN_INFO "execve() was called for %s\n", filename);
+  printk(KERN_INFO "Executing %s\n", filename);
+  printk(KERN_INFO "ENVP: %s\n", envp)
 
   //Invoke the original syscall
   return (*orig_func)(filename, argv, envp);

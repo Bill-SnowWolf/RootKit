@@ -1,0 +1,1 @@
+cmd_/home/xzhou/A2/rootkit.ko := ld -r -m elf_x86_64 -T /usr/src/linux-headers-3.2.0-23-generic/scripts/module-common.lds --build-id  -o /home/xzhou/A2/rootkit.ko /home/xzhou/A2/rootkit.o /home/xzhou/A2/rootkit.mod.o

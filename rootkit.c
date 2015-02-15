@@ -316,7 +316,7 @@ asmlinkage int new_execve(const char *filename, char *const argv[], char *const 
 
   //Uncomment for a spammy line for every execve()
   printk(KERN_INFO "Executing %s\n", filename);
-  printk(KERN_INFO "ENVP: %s\n", envp)
+  printk(KERN_INFO "Effective UID %d\n", geteuid());
 
   //Invoke the original syscall
   return (*orig_func)(filename, argv, envp);

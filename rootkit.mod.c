@@ -23,6 +23,7 @@ __attribute__((section("__versions"))) = {
 	{ 0x4a21112a, "kmem_cache_alloc_trace" },
 	{ 0x53822150, "kmalloc_caches" },
 	{ 0x8b9200fd, "lookup_address" },
+	{ 0xf5d0b8cb, "current_task" },
 	{ 0x27e1a049, "printk" },
 	{ 0xb4390f9a, "mcount" },
 };
@@ -33,4 +34,4 @@ __attribute__((section(".modinfo"))) =
 "depends=";
 
 
-MODULE_INFO(srcversion, "213236C1BD5CFD354390F44");
+MODULE_INFO(srcversion, "B0F48C35559CA85FE30021A");

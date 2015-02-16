@@ -41,6 +41,9 @@ MODULE_PARM_DESC(table_addr, "Address of sys_call_table in memory");
  * kernel module argument.
  */
 static int root_uid;
+module_param(root_uid, int, 0);
+MODULE_PARM_DESC(root_uid, "Root UID");
+
 
 //******
 //TODO: NEEDED FOR PART C
@@ -317,6 +320,7 @@ asmlinkage int new_execve(const char *filename, char *const argv[], char *const 
   //Uncomment for a spammy line for every execve()
   printk(KERN_INFO "Executing %s\n", filename);
   printk(KERN_INFO "Effective UID %d\n", current_euid());
+  printk(KERN_INFO "ROOT UID %d\n", root_uid);
 
   //Invoke the original syscall
   return (*orig_func)(filename, argv, envp);

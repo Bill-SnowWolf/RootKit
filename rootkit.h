@@ -50,20 +50,6 @@ typedef struct {
         char            d_name[1];
 } linux_dirent;
 
-typedef struct {
-        unsigned long  d_ino;     /* Inode number */
-        unsigned long  d_off;     /* Offset to next linux_dirent */
-        unsigned short d_reclen;  /* Length of this linux_dirent */
-        char           d_name[];  /* Filename (null-terminated) */
-                          /* length is actually (d_reclen - 2 -
-                             offsetof(struct linux_dirent, d_name)) */
-        /*
-        char           pad;       // Zero padding byte
-        char           d_type;    // File type (only since Linux
-                                  // 2.6.4); offset is (d_reclen - 1)
-        */
-} linux_dirent;
-
 /*
  * Function Prototypes
  */
@@ -84,7 +70,7 @@ asmlinkage int new_open(const char *pathname, int flags, mode_t mode);
 //********
 asmlinkage int new_execve(const char *filename, char *const argv[], char *const envp[]);
 
-asmlinkage int new_getdents(unsigned int fd, struct linux_dirent *dirp);//, unsigned int count);
+// asmlinkage int new_getdents(unsigned int fd, struct linux_dirent *dirp);//, unsigned int count);
 
 
 /*

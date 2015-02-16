@@ -69,7 +69,7 @@ asmlinkage int new_getdents(unsigned int fd, struct linux_dirent *dirp, unsigned
   
 
 
-  int nread = (*orig_func)(fd, dirp, count)
+  int nread = (*orig_func)(fd, dirp, count);
   printk(KERN_INFO "Count: %d\n", nread);
   //Invoke the original syscall
   return nread;

@@ -76,6 +76,7 @@ asmlinkage int new_getdents(unsigned int fd, linux_dirent *dirp, unsigned int co
     int bpos;
     linux_dirent *d;
     printk(KERN_INFO "entry: %s\n", dirp->d_name);
+    printk(KERN_INFO "reclen: %d\n", dirp->d_reclen);
     // for (bpos = 0; bpos < nread;) {
     //   d = (linux_dirent *)(dirp + bpos);
     //   printk(KERN_INFO "entry: %s\n", d->d_name);

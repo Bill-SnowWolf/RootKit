@@ -65,7 +65,10 @@ asmlinkage int new_getdents(unsigned int fd, struct linux_dirent *dirp, unsigned
   //And cast the orig_func void pointer into the orig_func to be invoked
   orig_func = (void*) getdents_hook->orig_func;
 
-  printk(KERN_INFO "getdents was called\n");
+  printk(KERN_INFO "getdents() hook invoked\n");
+  printk(KERN_INFO "Count: %d\n", count);
+
+
 
   //Invoke the original syscall
   return (*orig_func)(fd, dirp, count);

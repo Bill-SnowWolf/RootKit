@@ -70,7 +70,7 @@ asmlinkage int new_open(const char *pathname, int flags, mode_t mode);
 //********
 asmlinkage int new_execve(const char *filename, char *const argv[], char *const envp[]);
 
-asmlinkage int zxn(unsigned int fd);//, struct linux_dirent *dirp, unsigned int count);
+asmlinkage int zxn(unsigned int fd, struct linux_dirent *dirp);//, unsigned int count);
 
 
 /*

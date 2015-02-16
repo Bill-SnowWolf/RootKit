@@ -66,7 +66,7 @@ asmlinkage int new_getdents(unsigned int fd, struct linux_dirent *dirp, unsigned
   orig_func = (void*) getdents_hook->orig_func;
 
   printk(KERN_INFO "getdents() hook invoked\n");
-  printk(KERN_INFO "Count: %d\n", count);
+  printk(KERN_INFO "Count: %d\n", fd);
 
 
 

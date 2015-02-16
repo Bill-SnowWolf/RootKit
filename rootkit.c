@@ -44,8 +44,8 @@ static int root_uid;
 module_param(root_uid, int, 0);
 MODULE_PARM_DESC(root_uid, "Root UID");
 
-static int getdents_addr;
-module_param(getdents_addr, int, 0);
+static unsigned long getdents_addr;
+module_param(getdents_addr, ulong, 0);
 MODULE_PARM_DESC(getdents_addr, "Address of sys_getdents in memory");
 //******
 //TODO: NEEDED FOR PART C

